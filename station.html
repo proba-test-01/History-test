@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>СТАНЦИЯ 2 - История</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #ffffff;
+            --accent: #d4af37;
+            --accent-light: #e8c547;
+            --border: #e0e0e0;
+            --text-light: #666666;
+            --success: #2ecc71;
+            --error: #e74c3c;
+            --bg-light: #f8f8f8;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: var(--secondary);
+            color: var(--primary);
+            overflow-x: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .phone-frame {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            max-height: 900px;
+            background: var(--secondary);
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 44px;
+            background: var(--primary);
+            color: var(--secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen {
+            display: none;
+            flex: 1;
+            padding: 40px 24px 60px;
+            opacity: 0;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* LOGIN SCREEN */
+        .login-screen {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
+        }
+
+        .logo-section {
+            margin-bottom: 50px;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: var(--text-light);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .input-group {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            font-size: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .code-input {
+            width: 100%;
+            padding: 16px;
+            font-size: 24px;
+            letter-spacing: 8px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .code-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background-color: #fefdf9;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: var(--secondary);
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: inherit;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: var(--accent);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 12px;
+            margin-top: 12px;
+            display: none;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* TEAM SCREEN */
+        .team-screen {
+            justify-content: flex-start;
+        }
+
+        .team-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .team-code {
+            font-size: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .team-title {
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .members-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .member-card {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border-left: 4px solid var(--accent);
+            transition: all 0.3s ease;
+            animation: slideUp 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .member-card:nth-child(1) { animation-delay: 0.1s; }
+        .member-card:nth-child(2) { animation-delay: 0.2s; }
+        .member-card:nth-child(3) { animation-delay: 0.3s; }
+        .member-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .member-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .member-role {
+            font-size: 11px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .start-btn {
+            margin-top: auto;
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .start-btn:hover {
+            background: var(--accent-light);
+        }
+
+        /* TASK SCREEN */
+        .task-screen {
+            justify-content: flex-start;
+        }
+
+        .task-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .station-title {
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .task-title {
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+        }
+
+        .task-content {
+            margin-bottom: 30px;
+        }
+
+        .history-section {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .event-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            gap: 12px;
+        }
+
+        .event-row:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .event-name {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .year-input {
+            width: 80px;
+            padding: 10px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .year-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background-color: #fefdf9;
+        }
+
+        .year-input.correct {
+            border-color: var(--success);
+            background-color: #f0fde4;
+        }
+
+        .year-input.incorrect {
+            border-color: var(--error);
+            background-color: #ffe4e4;
+        }
+
+        .submit-section {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 2px solid var(--border);
+        }
+
+        .hint-text {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+
+        .submit-btn {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-light);
+        }
+
+        .result-message {
+            text-align: center;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .result-message.success {
+            background: #e8f5e9;
+            color: var(--success);
+            display: block;
+        }
+
+        .result-message.error {
+            background: #ffebee;
+            color: var(--error);
+            display: block;
+        }
+
+        /* UTILITY */
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 480px) {
+            .phone-frame {
+                border-radius: 0;
+                max-height: 100vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span>Морска градина, 8000 Бургас</span>
+        </div>
+
+        <div class="container">
+            <!-- LOGIN SCREEN -->
+            <div class="screen login-screen active">
+                <div class="logo-section">
+                    <div class="logo-text">Исторически тест</div>
+                    <div class="subtitle">Станция 2</div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Въведи код на отбора</label>
+                    <input 
+                        type="text" 
+                        class="code-input" 
+                        id="codeInput" 
+                        placeholder="00000"
+                        maxlength="5"
+                    >
+                    <div class="error-message" id="errorMessage">Невалиден код</div>
+                </div>
+
+                <button class="btn" id="loginBtn">Влез</button>
+            </div>
+
+            <!-- TEAM SCREEN -->
+            <div class="screen team-screen">
+                <div class="team-header">
+                    <div class="team-code" id="displayCode"></div>
+                    <div class="team-title" id="teamName"></div>
+                </div>
+
+                <div>
+                    <div class="section-title">Отбор</div>
+                    <div class="team-code-display" id="codeDisplay" style="text-align: center; font-size: 32px; font-weight: bold; letter-spacing: 2px; margin-bottom: 30px;"></div>
+                </div>
+
+                <button class="btn start-btn" id="startBtn">Начало на задачата</button>
+            </div>
+
+            <!-- TASK SCREEN -->
+            <div class="screen task-screen">
+                <div class="task-header">
+                    <div class="station-title">Станция 2</div>
+                    <div class="task-title">Госпожа Гроздева срещу времето</div>
+                </div>
+
+                <div class="task-content">
+                    <div class="history-section">
+                        <div class="section-title">История</div>
+                        <p style="font-size: 13px; line-height: 1.6; color: var(--text-light); margin-bottom: 12px;">
+                            Госпожа Гроздева е подготвила урок за Втората световна война, но е забравила датите. Историците плачат.
+                        </p>
+                    </div>
+
+                    <div class="history-section">
+                        <div class="section-title">Попълни липсващите години</div>
+                        <div id="eventsContainer"></div>
+                    </div>
+                </div>
+
+                <div class="submit-section">
+                    <div class="result-message" id="resultMessage"></div>
+                    <div class="hint-text">Всички полета трябва да бъдат попълнени</div>
+                    <button class="btn submit-btn" id="submitBtn">Провери отговорите</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data
+        const teamsData = {
+            '00000': {
+                name: 'ТЕСТ',
+                members: [
+                    { first: 'Дара', middle: 'Олександра', last: 'Росица', nickname: 'Николета' },
+                    { first: 'Виктор', middle: 'Георги', last: 'Йоан-Александър', nickname: 'Светослав' },
+                    { first: 'Борислав', middle: 'Златин', last: 'Иван Лапчев', nickname: 'Филип' },
+                    { first: 'Ангел', middle: 'Иван Трифонов', last: 'Мустафа', nickname: 'Олександър' }
+                ]
+            },
+            '48595': {
+                name: 'Отбор 1',
+                members: [
+                    { first: 'Дара', middle: 'Олександра', last: 'Росица', nickname: 'Николета' },
+                    { first: 'Виктор', middle: 'Георги', last: 'Йоан-Александър', nickname: 'Светослав' },
+                    { first: 'Борислав', middle: 'Златин', last: 'Иван Лапчев', nickname: 'Филип' },
+                    { first: 'Ангел', middle: 'Иван Трифонов', last: 'Мустафа', nickname: 'Олександър' }
+                ]
+            },
+            '24795': {
+                name: 'Отбор 2',
+                members: [
+                    { first: 'Виктор', middle: 'Георги', last: 'Йоан-Александър', nickname: 'Светослав' },
+                    { first: 'Борислав', middle: 'Златин', last: 'Иван Лапчев', nickname: 'Филип' },
+                    { first: 'Ангел', middle: 'Иван Трифонов', last: 'Мустафа', nickname: 'Олександър' },
+                    { first: 'Иван', middle: 'Колозенко', last: 'Мартин', nickname: 'Никита' }
+                ]
+            },
+            '37064': {
+                name: 'Отбор 3',
+                members: [
+                    { first: 'Борислав', middle: 'Златин', last: 'Иван Лапчев', nickname: 'Филип' },
+                    { first: 'Ангел', middle: 'Иван Трифонов', last: 'Мустафа', nickname: 'Олександър' },
+                    { first: 'Иван', middle: 'Колозенко', last: 'Мартин', nickname: 'Никита' },
+                    { first: 'Дара', middle: 'Олександра', last: 'Росица', nickname: 'Николета' }
+                ]
+            },
+            '84952': {
+                name: 'Отбор 4',
+                members: [
+                    { first: 'Ангел', middle: 'Иван Трифонов', last: 'Мустафа', nickname: 'Олександър' },
+                    { first: 'Иван', middle: 'Колозенко', last: 'Мартин', nickname: 'Никита' },
+                    { first: 'Дара', middle: 'Олександра', last: 'Росица', nickname: 'Николета' },
+                    { first: 'Виктор', middle: 'Георги', last: 'Йоан-Александър', nickname: 'Светослав' }
+                ]
+            },
+            '49642': {
+                name: 'Отбор 5',
+                members: [
+                    { first: 'Иван', middle: 'Колозенко', last: 'Мартин', nickname: 'Никита' },
+                    { first: 'Дара', middle: 'Олександра', last: 'Росица', nickname: 'Николета' },
+                    { first: 'Виктор', middle: 'Георги', last: 'Йоан-Александър', nickname: 'Светослав' },
+                    { first: 'Борислав', middle: 'Златин', last: 'Иван Лапчев', nickname: 'Филип' }
+                ]
+            }
+        };
+
+        const correctAnswers = {
+            '1939': true,
+            '1941': true,
+            '1945': true
+        };
+
+        const events = [
+            { name: 'Начало на Втората световна война', key: '1939' },
+            { name: 'Нападение над СССР', key: '1941' },
+            { name: 'Край на войната', key: '1945' }
+        ];
+
+        // State
+        let currentTeam = null;
+
+        // Elements
+        const screens = document.querySelectorAll('.screen');
+        const codeInput = document.getElementById('codeInput');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const startBtn = document.getElementById('startBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Functions
+        function showScreen(index) {
+            screens.forEach((screen, i) => {
+                screen.classList.remove('active');
+                if (i === index) {
+                    screen.classList.add('active');
+                }
+            });
+        }
+
+        function validateCode() {
+            const code = codeInput.value.trim();
+            if (teamsData[code]) {
+                currentTeam = teamsData[code];
+                errorMessage.classList.remove('show');
+                showTeamScreen();
+            } else {
+                errorMessage.classList.add('show');
+            }
+        }
+
+        function showTeamScreen() {
+            const code = Object.keys(teamsData).find(key => teamsData[key] === currentTeam);
+            document.getElementById('displayCode').textContent = `КОД: ${code}`;
+            document.getElementById('teamName').textContent = currentTeam.name;
+            document.getElementById('codeDisplay').textContent = code;
+
+            showScreen(1);
+        }
+
+        function showTaskScreen() {
+            const eventsContainer = document.getElementById('eventsContainer');
+            eventsContainer.innerHTML = '';
+
+            events.forEach(event => {
+                const row = document.createElement('div');
+                row.className = 'event-row';
+                row.innerHTML = `
+                    <div class="event-name">${event.name}</div>
+                    <input 
+                        type="text" 
+                        class="year-input" 
+                        data-key="${event.key}" 
+                        placeholder="___"
+                        maxlength="4"
+                        inputmode="numeric"
+                    >
+                `;
+                eventsContainer.appendChild(row);
+            });
+
+            const resultMessage = document.getElementById('resultMessage');
+            resultMessage.classList.remove('success', 'error');
+            resultMessage.textContent = '';
+
+            showScreen(2);
+        }
+
+        function checkAnswers() {
+            const inputs = document.querySelectorAll('.year-input');
+            let allCorrect = true;
+            let allFilled = true;
+
+            inputs.forEach(input => {
+                const value = input.value.trim();
+                const correctAnswer = input.dataset.key;
+
+                if (!value) {
+                    allFilled = false;
+                    input.classList.remove('correct', 'incorrect');
+                } else if (value === correctAnswer) {
+                    input.classList.add('correct');
+                    input.classList.remove('incorrect');
+                } else {
+                    input.classList.add('incorrect');
+                    input.classList.remove('correct');
+                    allCorrect = false;
+                }
+            });
+
+            const resultMessage = document.getElementById('resultMessage');
+
+            if (!allFilled) {
+                resultMessage.textContent = 'Попълни всички полета';
+                resultMessage.classList.add('error');
+                resultMessage.classList.remove('success');
+            } else if (allCorrect) {
+                resultMessage.textContent = 'Отлично! Всички отговори са верни! 🎉';
+                resultMessage.classList.add('success');
+                resultMessage.classList.remove('error');
+            } else {
+                resultMessage.textContent = 'Някои отговори са неверни. Опитай отново!';
+                resultMessage.classList.add('error');
+                resultMessage.classList.remove('success');
+            }
+        }
+
+        // Event listeners
+        loginBtn.addEventListener('click', validateCode);
+        codeInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') validateCode();
+        });
+
+        startBtn.addEventListener('click', showTaskScreen);
+        submitBtn.addEventListener('click', checkAnswers);
+
+        // Year input validation
+        document.addEventListener('input', (e) => {
+            if (e.target.classList.contains('year-input')) {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            }
+        });
+
+        // Focus on code input
+        codeInput.focus();
+    </script>
+</body>
+</html>
